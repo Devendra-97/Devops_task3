@@ -1,0 +1,30 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: jen-deploy 
+  labels:
+    app: jenkins
+spec:
+  selector:
+    matchLabels:
+      app: jenkins
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      containers:
+      - image: 8954295901/jen:v1
+        name: jenkins
+        ports:
+        - containerPort: 8080
+          name: jenkins
+        volumeMounts:
+        - name: jenkins-pv
+          mountPath: /root/.jenkins
+      volumes:
+      - name: jenkins-pv
+        persistentVolumeClaim:
+          claimName: pvc-jenkins
